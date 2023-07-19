@@ -30,7 +30,7 @@ export interface TableHeaderTypes {
     data: any[],
     expandable?: any,
     onRowSelection?: RowSelectionType,
-    rowKey: string
+    rowKey?: string
 
 
 }
@@ -67,5 +67,5 @@ export interface TableTypes {
     onChange?: OnChangeEventType,
     expandable?: any,
     onRowSelection?: RowSelectionType,
-    rowKey: string,
+    rowKey?: string,
 }

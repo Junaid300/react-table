@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Table from "Components/Table"
 import { rowSelectionHandler } from 'Components/Table/helper'
 import { ColumnsTypes, OnChangeEventType } from 'Components/Table/tableProps'
 
 const App = () => {
-
+    const [tableData ,setData ] = useState([])
     const [order, setOrder] = useState({ key: "", order: "asc" })
     const [selectedRowKeys, setSelectedRows] = useState<string[]>([])
 
@@ -13,45 +13,28 @@ const App = () => {
         setOrder(prev => ({ key: val, order: prev.order === "asc" ? "desc" : "asc" }))
     }
 
+
     const columns = [
         {
-            header: "Post Title",
-            dataKey: "post_title",
-            sort: true,
-            sortKey: "post_title",
-            with: 40,
+            header: "Title",
+            dataKey: "title",
+            // sort: true,
+            // sortKey: "post_title",
+            // with: 40,
             // render: (value: any, content: any, callback: OnChangeEventType) => <input type='checkbox' onChange={(e) => callback(content, e.target.checked)} />
-            headRender: (content: ColumnsTypes, callback: OnChangeEventType) => <input onChange={(e) => callback({ key: "post_title", value: e.target.value })} type="text" />,
+            // headRender: (content: ColumnsTypes, callback: OnChangeEventType) => <input onChange={(e) => callback({ key: "post_title", value: e.target.value })} type="text" />,
         },
         {
-            header: "Post Decription",
-            dataKey: "post_description",
-            sort: true,
-            sortKey: "post_description",
-            with: 15,
+            header: "complete",
+            dataKey: "completed",
+            // sort: true,
+            // sortKey: "post_description",
+            // with: 15,
         },
         {
-            header: "Post Likes",
-            dataKey: "post_likes",
-            sort: true,
+            header: "userId",
+            dataKey: "userId",
 
-        },
-        {
-            header: "New Post",
-            dataKey: "new_post",
-        },
-        {
-            header: "Community Id",
-            dataKey: "community_id",
-        },
-        {
-            header: "Billee Id",
-            dataKey: "billee_id",
-            sort: true,
-        },
-        {
-            header: "Company",
-            dataKey: "compnay_name",
         },
     ]
 
@@ -78,22 +61,39 @@ const App = () => {
         },
     ]
 
+    useEffect(()=>{
+        handleFetchTodos()
+    },[])
+
+    const handleFetchTodos = async() => {
+        try {
+            const data =  await fetch('https://jsonplaceholder.typicode.com/todos',{
+                method: 'Get'
+            }).then(res=>res.json())
+            setData(data)
+            console.log(data)
+        }
+        catch(error) {
+            console.log(error)
+        }
+        // https://jsonplaceholder.typicode.com/todos
+    }
     return (
         <Table
             columns={columns}
-            data={data}
-            onSort={onSort}
-            order={order}
+            data={tableData}
+            // onSort={onSort}
+            // order={order}
             // onChange={(key, value) => console.log(key, value)}
-            expandable={{ expandedRowRender: (record: any) => <td colSpan={columns.length + 1}>{record?.onetwo?.map((item: any, index: any) => <p key={`${item.name}${index}`}>{item.name}</p>)} </td> }}
-            onRowSelection={{
-                type: "chekbox",
-                selectedRowKeys,
-                onChange: (newSelectedKeys: string | string[]) => {
-                    setSelectedRows(prev => rowSelectionHandler(prev, newSelectedKeys));
-                }
-            }}
-            rowKey={"post_description"}
+            // expandable={{ expandedRowRender: (record: any) => <td colSpan={columns.length + 1}>{record?.onetwo?.map((item: any, index: any) => <p key={`${item.name}${index}`}>{item.name}</p>)} </td> }}
+            // onRowSelection={{
+            //     type: "chekbox",
+            //     selectedRowKeys,
+            //     onChange: (newSelectedKeys: string | string[]) => {
+            //         setSelectedRows(prev => rowSelectionHandler(prev, newSelectedKeys));
+            //     }
+            // }}
+            // rowKey={"post_description"}
         />
     )
 }
